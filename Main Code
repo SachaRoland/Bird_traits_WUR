@@ -7,4 +7,4 @@ library(vegan)
 
 setwd(< your working directory>)
 
-bird <- read_xlsx("data/AVONET-Dataset-Aquatic.xlsx", sheet = "AVONET_Data")
+birds <- read_xlsx("data/AVONET-Dataset-Aquatic.xlsx", sheet = "AVONET_Data")
