@@ -8,3 +8,20 @@ library(vegan)
 setwd(< your working directory>)
 
 birds <- read_xlsx("data/AVONET-Dataset-Aquatic.xlsx", sheet = "AVONET_Data")
+summary(birds)
+
+## Add beak morphology ratios
+    # culmen length/width
+birds$cl_w <- birds$Beak.Length_Culmen/birds$Beak.Width
+
+    # culmen length/depth
+birds$cl_d <- birds$Beak.Length_Culmen/birds$Beak.Depth
+
+    # nares length/width
+birds$nl_w <- birds$Beak.Length_Nares/birds$Beak.Width
+
+    # nares length/depth
+birds$nl_d <- birds$Beak.Length_Nares/birds$Beak.Depth
+
+    # width/depth
+birds$w_d <- birds$Beak.Width/birds$Beak.Depth
