@@ -1,3 +1,10 @@
- # steps 
+# intro -------------------------------------------------------------------
+#load libraries
 
-#1) Clustering of water birds
+library(tidyverse)
+library(readxl)
+library(vegan)
+
+setwd(< your working directory>)
+
+bird <- read_xlsx("data/AVONET-Dataset-Aquatic.xlsx", sheet = "AVONET_Data")
