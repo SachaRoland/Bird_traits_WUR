@@ -124,15 +124,17 @@ ordihull(birds_mds, groups = birds_env$Order,
 #if we want to do somethings statistical, we need to do a PCA
 
 #-------------------------------------------PCA_Beaks-----------------------
-#preparing data for PCA
 #filter out dependent variables (ONLY BEAK THIS TIME)
 birds_beak <- birds %>% 
   select(1, 9, 10, 11, 12)
 
+birds_beak
+
+#preparing data for PCA
 birds_beak <- birds_beak %>% column_to_rownames("Species")
 birds_beak
-# Perform PCA 
-birds_pca <- rda(birds_beak)
+# Perform PCA on scaled data
+birds_pca <- rda(scale(birds_beak))
 
 # Inspect by showing it in the console
 birds_pca
