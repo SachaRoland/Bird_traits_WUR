@@ -123,27 +123,6 @@ ordihull(birds_mds, groups = birds_env$Order,
 #separate MDS on seperate clusters might be interesting to get rid of the overlap
 #if we want to do somethings statistical, we need to do a PCA
 
-
-#------------------------------------------------------------------------
-#General model for birds  
-# Need to conduct PCA on morphological traits. 
-
-#lm_birds<- lm(PCA axis for traits ~ Family + Order + Habitat + Habitat.Density+
-"Migration", "Trophic.Level", "Trophic.Niche", data = birds)
-
-# Retrieve residuals
-birds$residuals <- residuals(lm_birds)
-
-# Plot histogram --> test distribution of residuals !!!
-ggplot(data = birds, mapping = aes(x = residuals)) +
-  geom_histogram(aes(y = after_stat(density)),
-                 fill = "white", colour = "black", bins = 5) +
-  stat_theodensity(distri = "norm", colour = "red")
-
-shapiro.test(birds$residuals) # normal
-
-summary(lm_birds)
-
 #-------------------------------------------PCA_Beaks-----------------------
 #preparing data for PCA
 birds_beak <- birds_beak %>% column_to_rownames("Species")
@@ -171,4 +150,26 @@ ordiplot(birds_pca, type = "text")
 
 # Create ordination diagram with arrows for the beak dimensions (length two times, depth and width)
 biplot(birds_pca)
+
+
+#------------------------------------------------------------------------
+#General model for birds  
+# Need to conduct PCA on morphological traits. 
+
+#lm_birds<- lm(PCA axis for traits ~ Family + Order + Habitat + Habitat.Density+
+"Migration", "Trophic.Level", "Trophic.Niche", data = birds)
+
+# Retrieve residuals
+birds$residuals <- residuals(lm_birds)
+
+# Plot histogram --> test distribution of residuals !!!
+ggplot(data = birds, mapping = aes(x = residuals)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 fill = "white", colour = "black", bins = 5) +
+  stat_theodensity(distri = "norm", colour = "red")
+
+shapiro.test(birds$residuals) # normal
+
+summary(lm_birds)
+
 
