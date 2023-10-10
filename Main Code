@@ -191,4 +191,5 @@ shapiro.test(birds$residuals) # normal
 
 summary(lm_birds)
 
-
+no_peli <- birds %>% 
+  filter(Order != "Pelecaniformes")
