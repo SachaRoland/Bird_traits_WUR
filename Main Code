@@ -190,6 +190,38 @@ ggplot(data = birds, mapping = aes(x = residuals)) +
 shapiro.test(birds$residuals) # normal
 
 summary(lm_birds)
-
+#------------------PCA on data of beaksm without ratios and pelicans
+#prepare data-set, excluding pelicans and ratios
 no_peli <- birds %>% 
   filter(Order != "Pelecaniformes")
+
+birds_beak_nopeli <- no_peli %>% 
+  select(1, 9, 10, 11, 12)
+
+birds_beak_nopeli <- birds_beak_nopeli %>% column_to_rownames("Species")
+birds_beak_nopeli
+
+# Perform PCA on scaled data
+beak_nopeli_pca <- rda(scale(birds_beak_nopeli))
+
+# Inspect by showing it in the console
+beak_nopeli_pca
+
+# Eigenvalues retrieval
+eigenvals(beak_nopeli_pca)
+
+# Retrieve eigenvalues PC axis and variance explained
+summary(eigenvals(beak_nopeli_pca))
+
+# Create scree plot
+screeplot(beak_nopeli_pca)
+
+# With broken stick
+screeplot(beak_nopeli_pca, bstick = TRUE)
+
+# Create ordination diagram
+ordiplot(beak_nopeli_pca, type = "text")
+
+# Create ordination diagram with arrows for the beak dimensions (length two times, depth and width)
+biplot(beak_nopeli_pca)
+
