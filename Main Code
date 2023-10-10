@@ -143,3 +143,32 @@ ggplot(data = birds, mapping = aes(x = residuals)) +
 shapiro.test(birds$residuals) # normal
 
 summary(lm_birds)
+
+#-------------------------------------------PCA_Beaks-----------------------
+#preparing data for PCA
+birds_beak <- birds_beak %>% column_to_rownames("Species")
+birds_beak
+# Perform PCA 
+birds_pca <- rda(birds_beak)
+
+# Inspect by showing it in the console
+birds_pca
+
+# Eigenvalues retrieval
+eigenvals(birds_pca)
+
+# Retrieve eigenvalues PC axis and variance explained
+summary(eigenvals(birds_pca))
+
+# Create scree plot
+screeplot(birds_pca)
+
+# With broken stick
+screeplot(birds_pca, bstick = TRUE)
+
+# Create ordination diagram
+ordiplot(birds_pca, type = "text")
+
+# Create ordination diagram with arrows for the beak dimensions (length two times, depth and width)
+biplot(birds_pca)
+
