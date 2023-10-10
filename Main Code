@@ -17,7 +17,14 @@ birds <- birds %>%
 birds <- birds %>% 
   select(Species, Genus, everything())
 
-# ---------------- ADD LATER ------------------------ ##
+# ---------------- TRANSFORM DATA ------------------------ ##
+#add genus as seperate column
+birds <- birds %>% 
+  mutate(Genus = word(Species, 1))
+
+birds <- birds %>% 
+  select(Species, Genus, everything())
+
 ## Add beak morphology ratios
     # culmen length/width
 birds$cl_w <- birds$Beak.Length_Culmen/birds$Beak.Width
