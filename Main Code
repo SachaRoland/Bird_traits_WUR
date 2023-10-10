@@ -10,13 +10,6 @@ setwd(< your working directory>)
 birds <- read_xlsx("data/AVONET-Dataset-Aquatic.xlsx", sheet = "AVONET_Data")
 summary(birds)
 
-#add genus as seperate column
-birds <- birds %>% 
-  mutate(Genus = word(Species, 1))
-
-birds <- birds %>% 
-  select(Species, Genus, everything())
-
 # ---------------- TRANSFORM DATA ------------------------ ##
 #add genus as seperate column
 birds <- birds %>% 
@@ -40,6 +33,19 @@ birds$nl_d <- birds$Beak.Length_Nares/birds$Beak.Depth
 
     # width/depth
 birds$w_d <- birds$Beak.Width/birds$Beak.Depth
+
+#create beak - mass morphology ratios
+# culmen length/mass
+birds$cl_m <- birds$Beak.Length_Culmen/birds$Mass
+
+#depth/mass
+birds$d_m <- birds$Beak.Depth-birds$Mass
+
+#width/mass
+birds$w_m <- birds$Beak.Width/birds$Mass
+
+# nares length/mass
+birds$nl_m <- birds$Beak.Length_Nares/birds$Mass
 #-----------------------------------------------------##
 
 #species raws in data frame (maybe should not do that here...)
