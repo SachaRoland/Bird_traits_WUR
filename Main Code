@@ -10,6 +10,7 @@ setwd(< your working directory>)
 birds <- read_xlsx("data/AVONET-Dataset-Aquatic.xlsx", sheet = "AVONET_Data")
 summary(birds)
 
+# ---------------- ADD LATER ------------------------ ##
 ## Add beak morphology ratios
     # culmen length/width
 birds$cl_w <- birds$Beak.Length_Culmen/birds$Beak.Width
@@ -25,3 +26,54 @@ birds$nl_d <- birds$Beak.Length_Nares/birds$Beak.Depth
 
     # width/depth
 birds$w_d <- birds$Beak.Width/birds$Beak.Depth
+#-----------------------------------------------------##
+
+#species raws in data frame (maybe should not do that here...)
+birds <- birds  %>% column_to_rownames("Species")
+
+## Set seed to make it reproducible
+set.seed(1234567)
+
+#select columns of interest 
+birds_beak <- birds %>% 
+select(8, 9, 10, 11, 18)
+
+#scale variables???
+  
+# birds_env made of family or order.   --> 
+  birds_env <- birds %>% 
+    select(1, 2)
+
+#make an MDS --> the probelm comes out of the k 
+birds_mds <- wcmdscale(vegdist(birds_beak, method = "bray"), k = 2) # 2 ordinations axes 
+
+# Inspect the coordinates via the scores function
+scores(birds_mds, tidy = TRUE)
+
+# Summarise the means/min/max per axis
+scores(birds_mds, tidy = TRUE) %>% 
+  summarise(min1  = min(Dim1),
+            mean1 = mean(Dim1),
+            max1  = max(Dim1),
+            min2  = min(Dim2),
+            mean2 = mean(Dim2),
+            max2  = max(Dim2)) %>% 
+  round(3)
+
+ordiplot(birds_mds, type = "text")
+
+# retrieve ordination scores
+birds_mds_scores <- scores(birds_mds, tidy = TRUE)
+cor(birds_mds_scores$Dim1, birds_mds_scores$Dim2)
+cor.test(birds_mds_scores$Dim1, birds_mds_scores$Dim2)
+
+# Compute species scores (as weighted averages of the site scores)
+speciesScores <- wascores(birds_mds, birds_beak)
+
+# Inspect
+speciesScores
+
+# Plot ordination diagram and add the species scores as text labels
+ordiplot(beaks_mds, type = "text")
+text(speciesScores, labels = rownames(speciesScores), col = "red", cex = 0.6)
+# Load data
