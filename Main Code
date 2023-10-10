@@ -97,3 +97,6 @@ set.seed(1234567)
 birds_mds <- wcmdscale(vegdist(birds_beak_scaled, method = "euclidean"), k = 2) # 2 ordinations axes 
 
 ordiplot(birds_mds, type = "points")
+#MDS Families, by beak and wing dimensions and weigth
+ordiplot(birds_mds, type = "points")
+ordihull(birds_mds, groups = birds_env$Family, col = c("red","green", "blue", "brown", "pink", "violet", "orange", "lightblue", "darkgreen", "yellow","purple", "lightgreen", "grey"), label = TRUE)
