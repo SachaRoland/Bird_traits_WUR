@@ -125,6 +125,10 @@ ordihull(birds_mds, groups = birds_env$Order,
 
 #-------------------------------------------PCA_Beaks-----------------------
 #preparing data for PCA
+#filter out dependent variables (ONLY BEAK THIS TIME)
+birds_beak <- birds %>% 
+  select(1, 9, 10, 11, 12)
+
 birds_beak <- birds_beak %>% column_to_rownames("Species")
 birds_beak
 # Perform PCA 
