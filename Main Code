@@ -77,13 +77,16 @@ speciesScores
 ordiplot(beaks_mds, type = "text")
 text(speciesScores, labels = rownames(speciesScores), col = "red", cex = 0.6)
 # Load data
------------------------ UPDATE------------------------
+
+# MDS for beak-order ------------------------------------------------------
+  
 #filter out independent variables
 birds_env <- birds %>% 
-  select(2,3, 25, 26, 27, 28, 29)
+  select(1, 2,3, 25, 26, 27, 28, 29)
 
+#filter out dependent variables (ONLY BEAK THIS TIME)
 birds_beak <- birds %>% 
-  select(1, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19)
+  select(1, 9, 10, 11, 12)
 
 # Convert to data.frame with rownames from Site column
 birds_beak <- birds_beak %>% column_to_rownames("Species")
@@ -96,7 +99,19 @@ set.seed(1234567)
 #make an MDS --> the probelm comes out of the k 
 birds_mds <- wcmdscale(vegdist(birds_beak_scaled, method = "euclidean"), k = 2) # 2 ordinations axes 
 
+birds_mds_scores <- scores(birds_mds, tidy = TRUE)
+
+cor.test(birds_mds_scores$Dim1, birds_mds_scores$Dim2)
+
+#calculate species scores
+speciesScores <- wascores(birds_mds, birds_beak)
+
 ordiplot(birds_mds, type = "points")
-#MDS Families, by beak and wing dimensions and weigth
-ordiplot(birds_mds, type = "points")
-ordihull(birds_mds, groups = birds_env$Family, col = c("red","green", "blue", "brown", "pink", "violet", "orange", "lightblue", "darkgreen", "yellow","purple", "lightgreen", "grey"), label = TRUE)
+#text(speciesScores, labels = rownames(speciesScores), col = "red", cex = 0.6)
+# Add convex-hulls for the different groups
+ordihull(birds_mds, groups = birds_env$Order,
+         col = c("red","green", "blue", "purple", "orange", "yellow", "darkgreen", "darkred", "darkblue"),
+         label = TRUE)
+#extract centroids, calculate differences between those to have an idea between the differences
+#separate MDS on seperate clusters might be interesting to get rid of the overlap
+#if we want to do somethings statistical, we need to do a PCA
