@@ -35,23 +35,24 @@ birds$nl_d <- birds$Beak.Length_Nares/birds$Beak.Depth
 birds$w_d <- birds$Beak.Width/birds$Beak.Depth
 
 #create beak - mass morphology ratios
-# culmen length/mass
+  # culmen length/mass
 birds$cl_m <- birds$Beak.Length_Culmen/birds$Mass
 
-#depth/mass
+  #depth/mass
 birds$d_m <- birds$Beak.Depth-birds$Mass
 
-#width/mass
+  #width/mass
 birds$w_m <- birds$Beak.Width/birds$Mass
 
-# nares length/mass
+  # nares length/mass
 birds$nl_m <- birds$Beak.Length_Nares/birds$Mass
-#-----------------------------------------------------##
+
+# WHICH MDS IS THIS -----------------------------------------------------##
 
 #species raws in data frame (maybe should not do that here...)
 birds <- birds  %>% column_to_rownames("Species")
 
-## Set seed to make it reproducible
+## Set seed to make it reproducable
 set.seed(1234567)
 
 #select columns of interest 
@@ -169,7 +170,6 @@ ordiplot(birds_pca, type = "text")
 
 # Create ordination diagram with arrows for the beak dimensions (length two times, depth and width)
 biplot(birds_pca)
-
 
 #------------------------------------------------------------------------
 #General model for birds  
