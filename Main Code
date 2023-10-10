@@ -10,6 +10,13 @@ setwd(< your working directory>)
 birds <- read_xlsx("data/AVONET-Dataset-Aquatic.xlsx", sheet = "AVONET_Data")
 summary(birds)
 
+#add genus as seperate column
+birds <- birds %>% 
+  mutate(Genus = word(Species, 1))
+
+birds <- birds %>% 
+  select(Species, Genus, everything())
+
 # ---------------- ADD LATER ------------------------ ##
 ## Add beak morphology ratios
     # culmen length/width
