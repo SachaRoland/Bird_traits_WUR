@@ -37,5 +37,13 @@ biplot(birds_beak_pca, type = "text")
  
 # Extract PC1 value for Univariate and GLM *********
 # Extract PC1 and make object 
-PC1 <- as.data.frame(birds_beak_pca$CA$v[,1]) # TADAAAA
+
+scorespca <- scores(birds_beak_pca)
+scorespca$sites
+
+# Extract PC1 and make object ******** IN PROGRESS
+PC1 <- scorespca$sites[, 1] #????
+PC1 <- as.data.frame(PC1)
+
+PC1 %>% dplyr::select(1)
 
