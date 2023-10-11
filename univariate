@@ -1,0 +1,25 @@
+# family - beak depth
+birds$Family <- as.factor(birds$Family)
+birds %>% 
+  group_by(Family) %>% 
+  summarise(mean = mean(Beak.Depth),
+            sd = sd(Beak.Depth)) %>% 
+  ggplot() +
+  geom_col(aes(x = Family, y = mean),
+           fill = "skyblue") +
+  geom_errorbar(aes(x = Family, ymin = mean - sd, ymax = mean + sd),
+                width = 0.3, colour = "orange", linewidth = 1) + 
+  xlab("Family") + ylab("Beak depth [mm]")
+
+### Plot the histograms and add normality curves
+ggplot(
+  data = birds,
+  mapping = aes(x = Beak.Depth)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 fill = "white", colour = "black", bins = 15) +
+  stat_theodensity(distri = "norm", colour = "red") +
+  facet_wrap(~ Family, nrow = 1, ncol = 13)
+
+### Test for normality
+tapply(birds$Beak.Depth, birds$Family, shapiro.test)
+#not normally distributed
