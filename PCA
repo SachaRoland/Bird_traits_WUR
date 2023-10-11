@@ -53,4 +53,11 @@ biplot(birds_beak_nopeli_pca, type = "text")
 ####### With and without pelicans does nto look crazy different thus far 
 ## keep going. 
 
-PC1_nopeli <- as.data.frame(birds_beak_nopeli_pca$CA$v[,1])
+
+# Extract PC1 and make object ******** IN PROGRESS
+scorespca <- scores(birds_beak_nopeli_pca)
+scorespca$sites
+PC1 <- scorespca$sites[, 1] #????
+PC1 <- as.data.frame(PC1)
+
+PC1 %>% dplyr::select(1)
