@@ -4,7 +4,7 @@
 birds_env <- birds %>% 
   select(1, 2, 3, 25, 26, 27, 28, 29)
 
-#filter out dependent variables (ONLY BEAK THIS TIME)
+#filter out dependent variables
 birds_beak <- birds %>% 
   select(1, 10, 11, 12, 13)
 
@@ -35,7 +35,5 @@ ordihull(birds_mds, groups = birds_env$Order,
 #extract centroids, calculate differences between those to have an idea between the differences
 #separate MDS on seperate clusters might be interesting to get rid of the overlap
 #if we want to do somethings statistical, we need to do a PCA
-
-#### MDS for beak-order WITHOUT pelicans------------------------------------------------------
 
 
