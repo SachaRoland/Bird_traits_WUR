@@ -51,11 +51,11 @@ birds$nl_m <- birds$Beak.Length_Nares/birds$Mass
   
 #filter out independent variables
 birds_env <- birds %>% 
-  select(1, 2,3, 25, 26, 27, 28, 29)
+  select(1, 2, 3, 25, 26, 27, 28, 29)
 
 #filter out dependent variables (ONLY BEAK THIS TIME)
 birds_beak <- birds %>% 
-  select(1, 9, 10, 11, 12)
+  select(1, 10, 11, 12, 13)
 
 # Convert to data.frame with rownames from Site column
 birds_beak <- birds_beak %>% column_to_rownames("Species")
@@ -86,12 +86,6 @@ ordihull(birds_mds, groups = birds_env$Order,
 #if we want to do somethings statistical, we need to do a PCA
 
 #-------------------------------------------PCA_Beaks-----------------------
-#filter out dependent variables (ONLY BEAK THIS TIME)
-birds_beak <- birds %>% 
-  select(1, 9, 10, 11, 12)
-
-birds_beak
-
 #preparing data for PCA
 birds_beak <- birds_beak %>% column_to_rownames("Species")
 birds_beak
@@ -141,14 +135,10 @@ summary(lm_birds)
 #------------------PCA on data of beaks without ratios and pelicans---------------
 
 #prepare data-set, excluding pelicans and ratios
-no_peli <- birds %>% 
+birds_beak_no_peli <- birds_beak %>% 
   filter(Order != "Pelecaniformes")
 
-birds_beak_nopeli <- no_peli %>% 
-  select(1, 9, 10, 11, 12)
-
 birds_beak_nopeli <- birds_beak_nopeli %>% column_to_rownames("Species")
-birds_beak_nopeli
 
 # Perform PCA on scaled data
 beak_nopeli_pca <- rda(scale(birds_beak_nopeli))
