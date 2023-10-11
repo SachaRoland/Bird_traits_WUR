@@ -57,13 +57,11 @@ set.seed(1234567)
 
 #select columns of interest 
 birds_beak <- birds %>% 
-select(8, 9, 10, 11, 18)
-
-#scale variables???
+dplyr::select(8, 9, 10, 11, 18)
   
 # birds_env made of family or order.   --> 
   birds_env <- birds %>% 
-    select(1, 2)
+    dplyr::select(1, 2)
 
 #make an MDS --> the probelm comes out of the k 
 birds_mds <- wcmdscale(vegdist(birds_beak, method = "bray"), k = 2) # 2 ordinations axes 
@@ -172,8 +170,7 @@ ordiplot(birds_pca, type = "text")
 biplot(birds_pca)
 
 #------------------------------------------------------------------------
-#General model for birds  
-# Need to conduct PCA on morphological traits. 
+#General Linear Model for birds  
 
 #lm_birds<- lm(PCA axis for traits ~ Family + Order + Habitat + Habitat.Density+
 "Migration", "Trophic.Level", "Trophic.Niche", data = birds)
@@ -190,7 +187,9 @@ ggplot(data = birds, mapping = aes(x = residuals)) +
 shapiro.test(birds$residuals) # normal
 
 summary(lm_birds)
-#------------------PCA on data of beaksm without ratios and pelicans
+
+#------------------PCA on data of beaks without ratios and pelicans---------------
+
 #prepare data-set, excluding pelicans and ratios
 no_peli <- birds %>% 
   filter(Order != "Pelecaniformes")
