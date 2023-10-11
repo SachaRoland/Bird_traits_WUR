@@ -1,4 +1,4 @@
-#### MDS for beak  WITH pelicans------------------------------------------------------
+#### MDS for beak  WITHOUT pelicans------------------------------------------------------
   
 #filter out independent variables
 birds_env <- birds %>% 
@@ -10,63 +10,28 @@ birds_beak_nopeli <- birds %>%
 birds_beak_nopeli <- birds_beak_nopeli%>% 
   dplyr::select(1, 9, 10, 11, 12)
 
+birds_beak_nopeli <- birds_beak_nopeli %>% column_to_rownames("Species")
 
-
-# Set seed to make it reproducible
-set.seed(1234567)
-
-#make an MDS --> the problem comes out of the k 
-birds_mds <- wcmdscale(vegdist(birds_beak_scaled, method = "euclidean"), k = 2) # 2 ordinations axes 
-
-birds_mds_scores <- scores(birds_mds, tidy = TRUE)
-
-cor.test(birds_mds_scores$Dim1, birds_mds_scores$Dim2)
-
-#calculate species scores
-speciesScores <- wascores(birds_mds, birds_beak)
-
-ordiplot(birds_mds, type = "points")
-#text(speciesScores, labels = rownames(speciesScores), col = "red", cex = 0.6)
-# Add convex-hulls for the different groups
-ordihull(birds_mds, groups = birds_env$Order,
-         col = c("red","green", "blue", "purple", "orange", "yellow", "darkgreen", "darkred", "darkblue"),
-         label = TRUE)
-#extract centroids, calculate differences between those to have an idea between the differences
-#separate MDS on seperate clusters might be interesting to get rid of the overlap
-#if we want to do somethings statistical, we need to do a PCA
-
-#### MDS for beak-order WITHOUT pelicans------------------------------------------------------
-
-#filter out independent variables
-birds_env <- birds %>% 
-  select(1, 2, 3, 25, 26, 27, 28, 29)
-
-#filter out dependent variables (ONLY BEAK THIS TIME)
-birds_beak <- birds %>% 
-  select(1, 10, 11, 12, 13)
-
-# Convert to data.frame with rownames from Site column
-birds_beak <- birds_beak %>% column_to_rownames("Species")
-
-birds_beak_scaled <- scale(birds_beak)
+birds_beak_nopeli_scaled <- scale(birds_beak_nopeli)
 
 # Set seed to make it reproducible
 set.seed(1234567)
 
 #make an MDS --> the problem comes out of the k 
-birds_mds <- wcmdscale(vegdist(birds_beak_scaled, method = "euclidean"), k = 2) # 2 ordinations axes 
+birds_nopeli_mds <- wcmdscale(vegdist(birds_beak_nopeli_scaled, method = "euclidean"), k = 2) # 2 ordinations axes 
 
-birds_mds_scores <- scores(birds_mds, tidy = TRUE)
+birds_nopeli_mds_scores <- scores(birds_nopeli_mds, tidy = TRUE)
 
-cor.test(birds_mds_scores$Dim1, birds_mds_scores$Dim2)
+cor.test(birds_nopeli_mds_scores$Dim1, birds_nopeli_mds_scores$Dim2)
 
 #calculate species scores
-speciesScores <- wascores(birds_mds, birds_beak)
+speciesScores <- wascores(birds_nopeli_mds, birds_nopeli)
 
-ordiplot(birds_mds, type = "points")
+ordiplot(birds_nopeli_mds, type = "points")
+
 #text(speciesScores, labels = rownames(speciesScores), col = "red", cex = 0.6)
 # Add convex-hulls for the different groups
-ordihull(birds_mds, groups = birds_env$Order,
+ordihull(birds_nopeli_mds, groups = birds_env$Order,
          col = c("red","green", "blue", "purple", "orange", "yellow", "darkgreen", "darkred", "darkblue"),
          label = TRUE)
 #extract centroids, calculate differences between those to have an idea between the differences
