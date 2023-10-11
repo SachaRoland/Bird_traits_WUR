@@ -1,1 +1,38 @@
+#General model for birds  
+# Need to conduct PCA on morphological traits. 
 
+# Extract PC1 and make object (USE PCA file in same branch)
+PC1 <- as.data.frame(birds_morph_pca$CA$v[,1]) #????
+
+lm_df <- merge(birds_env, PC1)
+lm_df$PC1 <- lm_df$`birds_morph_pca$CA$v[, 1]`
+
+lm_birds <- lm( PC1 ~  Habitat + Habitat.Density +
+Migration+ Trophic.Level +  Trophic.Niche, data = lm_df)
+
+summary(lm_birds)
+# No environmental variables predict for the PC1 /  the general morphospace of aquatic birds
+
+# Retrieve residuals
+lm_birds$residuals <- residuals(lm_birds)
+
+# Plot histogram --> test distribution of residuals !!!
+ggplot(data = lm_birds, mapping = aes(x = lm_birds$residuals)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 fill = "white", colour = "black", bins = 5) +
+  stat_theodensity(distri = "norm", colour = "red")
+
+shapiro.test(lm_birds$residuals) # not normal; not great 
+
+summary(lm_birds)
+
+
+
+#Colinearity using VIF() #interactions effect 
+#To fix multicollinearity, one can remove one of the highly correlated variables, 
+#combine them into a single variable (RATIOS)
+#, or use a dimensionality reduction technique, such as principal component analysis to reduce the number of variables while retaining 
+#most of the information.
+
+# so run different analysis. 
+# DO AIC!!!
