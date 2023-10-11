@@ -23,3 +23,10 @@ ggplot(
 ### Test for normality
 tapply(birds$Beak.Depth, birds$Family, shapiro.test)
 #not normally distributed
+
+# and the Kruskal-Wallis test
+kruskal.test(Beak.Length_Culmen ~ Family, data = birds)
+  #there is a significant difference ( p-value < 2.2e-16)
+
+  #post hoc dunn test
+dunn.test(birds$Beak.Length_Culmen, birds$Family, method = "bonferroni", list = TRUE)
