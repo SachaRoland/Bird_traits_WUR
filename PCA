@@ -7,40 +7,6 @@ birds_beak_scaled <- scale(birds_beak)
 set.seed(123456789)
 
 
-##### Perform PCA with all beak traits WITH Pelicans ***********
-
-birds_beak_pca <- rda(birds_beak_scaled)
-
-# Inspect by showing it in the console
-birds_beak_pca
-
-# Eigenvalues retrieval
-eigenvals(birds_beak_pca)
-
-# Retrieve eigenvalues PC axis and variance explained
-summary(eigenvals(birds_beak_pca))
-summary(birds_beak_pca)
-# 4 PCs; PC 1 explains 85% of variation. 
-
-# Create scree plot
-screeplot(birds_beak_pca)
-
-# With broken stick
-screeplot(birds_beak_pca, bstick = TRUE)
-
-# Create ordination diagram
-ordiplot(birds_beak_pca, type = "text")
-
-# Create ordination diagram with arrows for the beak dimensions (length two times, 
-#depth and width)
-biplot(birds_beak_pca, type = "text")
- 
-# Extract PC1 value for Univariate and GLM *********
-# Extract PC1 and make object 
-PC1 <- as.data.frame(birds_beak_pca$CA$v[,1]) # TADAAAA
-
-
-
 ##### Perform PCA with all beak traits WITHOUT Pelicans ***********
 
 #prepare data-set, excluding pelicans and ratios
