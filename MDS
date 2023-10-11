@@ -4,14 +4,13 @@
 birds_env <- birds %>% 
   select(1, 2, 3, 25, 26, 27, 28, 29)
 
-#filter out dependent variables (ONLY BEAK THIS TIME)
-birds_beak <- birds %>% 
-  select(1, 10, 11, 12, 13)
+birds_beak_nopeli <- birds %>% 
+  dplyr::filter(Order != "Pelecaniformes")
 
-# Convert to data.frame with rownames from Site column
-birds_beak <- birds_beak %>% column_to_rownames("Species")
+birds_beak_nopeli <- birds_beak_nopeli%>% 
+  dplyr::select(1, 9, 10, 11, 12)
 
-birds_beak_scaled <- scale(birds_beak)
+
 
 # Set seed to make it reproducible
 set.seed(1234567)
