@@ -54,3 +54,7 @@ stepwise <- stepAIC(glm_birds_beak, direction = 'backward')
 
 stepwise$anova # no better model could be found by removing variables. 
 summary(stepwise)
+
+### Predict for specific values of GW and OM
+bird_glm_predict <- predict(glm_birds_beak) ?????
+plot(bird_glm_predict)
