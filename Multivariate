@@ -1,1 +1,52 @@
+##### GENERALIZED LINE MODLE WITHOUT PELICANS *****
 
+# Add PC1 to birds' data frame; Careful with which data fram you're putting PC1 in.
+birds_beak_env$PC1 <- PC1_nopeli$PC1
+# Need to change PC1 to a vector (Can't be a list in glm())
+birds_beak_env$PC1 <- unlist(birds_beak_env$PC1)
+
+
+### RUN Generalized LILEAR MIXED MODEL 
+
+# First Check if there are variables with only 1 level first using 
+birds_beak_env <- birds %>% 
+  dplyr:: select(2, 25, 28)
+lapply(birds_beak_env[c("Family", "Habitat", 
+                        "Trophic.Level")], unique) # We're good.
+
+### Convert environmental variables to factors
+birds_beak_env$Family <- factor(birds_beak_env$Family)
+
+birds_beak_env %>% filter(Habitat != "NA")
+birds_beak_env$Habitat <- factor(birds_beak_env$Habitat) 
+# WHY IS THERE STILL NA????
+
+birds_beak_env$Trophic.Level <- factor(birds_beak_env$Trophic.Level)
+
+# Add PC1 to birds' data frame; Careful with which data fram you're putting PC1 in.
+birds$PC1 <- PC1$PC1
+# Need to change PC1 to a vector (Can't be a list in glm())
+birds$PC1 <- unlist(birds$PC1)
+
+# Run Generalized Linear Model.
+# We did not identify random factors. 
+glm_birds_beak <- glm(PC1 ~ Family + Habitat +  
+                        Trophic.Level, data = birds)
+
+vif(glm_birds_beak) # No colinearity; # We're good.
+Anova(glm_birds_beak)
+summary(glm_birds_beak)
+
+#POST-HOC
+#### Analyse the effect of forage type by looking at the difference among the three forage types
+# a sort of post-hoc test, with the default Sidak correction 
+emmeans(glm_birds_beak, pairwise ~ Family, adjust = "sidak", group = TRUE)
+
+emmeans(glm_birds_beak, pairwise ~ Habitat, adjust = "sidak", group = TRUE)
+#NA is fucking us with habitat... what to do? 
+# Can still tell taht there is no significant difference between habitats
+
+emmeans(glm_birds_beak, pairwise ~ Trophic.Level, adjust = "sidak", group = TRUE)
+# difference between herbivores and omnivores barely exists
+
+# No difference betweena with and without pelicans....
