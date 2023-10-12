@@ -6,7 +6,7 @@ birds_beak <- birds %>%
   dplyr::select(1,9, 10, 11, 12)
 
 birds_beak_env <- birds %>% 
-  dplyr:: select(2, 3, 25, 26, 28, 29)
+  dplyr:: selectselect(2, 25, 28)
 
 summary(birds_beak)
 
