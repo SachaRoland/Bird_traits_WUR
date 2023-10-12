@@ -1,0 +1,33 @@
+ PC1 with peli - univariate family ---------------------------------------
+
+birds$Family <- as.factor(birds$Family)
+birds %>% 
+  group_by(Family) %>% 
+  summarise(mean = mean(PC1peli),
+            sd = sd(PC1peli)) %>% 
+  ggplot() +
+  geom_col(aes(x = Family, y = mean),
+           fill = "skyblue") +
+  geom_errorbar(aes(x = Family, ymin = mean - sd, ymax = mean + sd),
+                width = 0.3, colour = "orange", linewidth = 1) + 
+  xlab("Family") + ylab("PC1 with peli")
+
+### Plot the histograms and add normality curves
+ggplot(
+  data = birds,
+  mapping = aes(x = PC1peli)) +
+  geom_histogram(aes(y = after_stat(density)),
+                 fill = "white", colour = "black", bins = 15) +
+  stat_theodensity(distri = "norm", colour = "red") +
+  facet_wrap(~ Family, nrow = 1, ncol = 13)
+
+### Test for normality
+tapply(birds$PC1peli, birds$Family, shapiro.test)
+#not normally distributed
+
+# and the Kruskal-Wallis test
+kruskal.test(PC1peli ~ Family, data = birds)
+#there is a significant difference ( p-value < 2.2e-16)
+
+# Example Dunn test results
+dunn.test(birds$PC1peli, birds$Family, method = "bonferroni", list = TRUE, label = TRUE)
