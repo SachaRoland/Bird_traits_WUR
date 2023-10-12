@@ -125,3 +125,5 @@ stepwise <- stepAIC(glm_birds_beak_nopeli, direction = 'backward')
 stepwise$anova # no better model could be found by removing variables. 
 summary(stepwise)
 
+#AIC is better with pelicans 
+
