@@ -50,3 +50,9 @@ emmeans(glm_birds_beak, pairwise ~ Trophic.Level, adjust = "sidak", group = TRUE
 # difference between herbivores and omnivores barely exists
 
 # No difference betweena with and without pelicans....
+
+#Determine what's is the the best model :) 
+stepwise <- stepAIC(glm_birds_beak, direction = 'backward')
+
+stepwise$anova # no better model could be found by removing variables. 
+summary(stepwise)
