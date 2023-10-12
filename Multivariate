@@ -1,38 +1,48 @@
-#General model for birds  
-# Need to conduct PCA on morphological traits. 
+# Add PC1 to birds' data frame; Careful with which data fram you're putting PC1 in.
+birds_beak_env$PC1 <- PC1$PC1
+# Need to change PC1 to a vector (Can't be a list in glm())
+birds_beak_env$PC1 <- unlist(birds_beak_env$PC1)
 
-# Extract PC1 and make object (USE PCA file in same branch)
-PC1 <- as.data.frame(birds_morph_pca$CA$v[,1]) #????
+### RUN Generalized LILEAR MIXED MODEL 
 
-lm_df <- merge(birds_env, PC1)
-lm_df$PC1 <- lm_df$`birds_morph_pca$CA$v[, 1]`
+# First Check if there are variables with only 1 level first using 
+birds_beak_env <- birds %>% 
+  dplyr:: select(2, 25, 28)
+lapply(birds_beak_env[c("Family", "Habitat", 
+                        "Trophic.Level")], unique) # We're good.
 
-lm_birds <- lm( PC1 ~  Habitat + Habitat.Density +
-Migration+ Trophic.Level +  Trophic.Niche, data = lm_df)
+### Convert environmental variables to factors
+birds_beak_env$Family <- factor(birds_beak_env$Family)
 
-summary(lm_birds)
-# No environmental variables predict for the PC1 /  the general morphospace of aquatic birds
+birds_beak_env %>% filter(Habitat != "NA")
+birds_beak_env$Habitat <- factor(birds_beak_env$Habitat) 
+# WHY IS THERE STILL NA????
 
-# Retrieve residuals
-lm_birds$residuals <- residuals(lm_birds)
+birds_beak_env$Trophic.Level <- factor(birds_beak_env$Trophic.Level)
 
-# Plot histogram --> test distribution of residuals !!!
-ggplot(data = lm_birds, mapping = aes(x = lm_birds$residuals)) +
-  geom_histogram(aes(y = after_stat(density)),
-                 fill = "white", colour = "black", bins = 5) +
-  stat_theodensity(distri = "norm", colour = "red")
+# Add PC1 to birds' data frame; Careful with which data fram you're putting PC1 in.
+birds$PC1 <- PC1$PC1
+# Need to change PC1 to a vector (Can't be a list in glm())
+birds$PC1 <- unlist(birds$PC1)
 
-shapiro.test(lm_birds$residuals) # not normal; not great 
+# Run Generalized Linear Model.
+# We did not identify random factors. 
+glm_birds_beak <- glm(PC1 ~ Family + Habitat +  
+                        Trophic.Level, data = birds)
 
-summary(lm_birds)
+vif(glm_birds_beak) # No colinearity; # We're good.
+Anova(glm_birds_beak)
+summary(glm_birds_beak)
 
+#POST-HOC
+#### Analyse the effect of forage type by looking at the difference among the three forage types
+# a sort of post-hoc test, with the default Sidak correction 
+emmeans(glm_birds_beak, pairwise ~ Family, adjust = "sidak", group = TRUE)
 
+emmeans(glm_birds_beak, pairwise ~ Habitat, adjust = "sidak", group = TRUE)
+#NA is fucking us with habitat... what to do? 
+# Can still tell taht there is no significant difference between habitats
 
-#Colinearity using VIF() #interactions effect 
-#To fix multicollinearity, one can remove one of the highly correlated variables, 
-#combine them into a single variable (RATIOS)
-#, or use a dimensionality reduction technique, such as principal component analysis to reduce the number of variables while retaining 
-#most of the information.
+emmeans(glm_birds_beak, pairwise ~ Trophic.Level, adjust = "sidak", group = TRUE)
+# difference between herbivores and omnivores barely exists
 
-# so run different analysis. 
-# DO AIC!!!
