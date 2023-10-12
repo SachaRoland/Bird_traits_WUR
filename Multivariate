@@ -1,3 +1,6 @@
+### GENERALIZED MODEL FOR WITH PELICANS *****
+
+
 # Add PC1 to birds' data frame; Careful with which data fram you're putting PC1 in.
 birds_beak_env$PC1 <- PC1$PC1
 # Need to change PC1 to a vector (Can't be a list in glm())
