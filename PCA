@@ -1,3 +1,15 @@
+#### PCA FOR WITH PELICANS
+
+# Make our objects 
+# no ratios (width/length) included
+birds_beak <- birds %>% 
+  dplyr::select(1,9, 10, 11, 12)
+
+birds_beak_env <- birds %>% 
+  dplyr:: select(2, 3, 25, 26, 28, 29)
+
+summary(birds_beak)
+
 # Convert to data.frame with rownames from Site column
 birds_beak <- birds_beak %>% column_to_rownames("Species")
 
