@@ -8,6 +8,10 @@ library(vegan)
 setwd(< your working directory>)
 
 birds <- read_xlsx("data/AVONET-Dataset-Aquatic.xlsx", sheet = "AVONET_Data")
+
+#Checked the birds whose habitat was NA --> They were all marine, so replaced
+birds$Habitat <- gsub("NA", "Marine", birds$Habitat)
+
 summary(birds)
 
 # ---------------- TRANSFORM DATA ------------------------ ##
