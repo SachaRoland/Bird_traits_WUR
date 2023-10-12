@@ -68,10 +68,10 @@ birds_nopeli$PC1 <- PC1_nopeli$PC1
 birds_beak_env_nopeli$PC1 <- unlist(birds_beak_env_nopeli$PC1)
 
 
-### RUN Generalized LILEAR MIXED MODEL 
+### RUN Generalized LINEAR MIXED MODEL 
 
 # First Check if there are variables with only 1 level first using 
-birds_beak_env_nopeli <- birds %>%  ### Identical AIC might come out of this. 
+birds_beak_env_nopeli <- birds_nopeli %>%  ### Identical AIC might come out of this. 
   dplyr:: select(2, 25, 28)
 lapply(birds_beak_env_nopeli[c("Family", "Habitat", 
                         "Trophic.Level")], unique) # We're good.
@@ -124,3 +124,4 @@ stepwise <- stepAIC(glm_birds_beak_nopeli, direction = 'backward')
 
 stepwise$anova # no better model could be found by removing variables. 
 summary(stepwise)
+
