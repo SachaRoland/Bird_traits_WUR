@@ -1,58 +1,126 @@
 ##### GENERALIZED LINE MODLE WITHOUT PELICANS *****
 
+birds <- read_xlsx("AVONET-Dataset-Aquatic.xlsx", sheet= 2)
+birds$Habitat <- gsub("NA", "Marine", birds$Habitat)
+
+birds_nopeli <- birds %>% 
+  dplyr::filter(Order != "Pelecaniformes")
+
+birds_beak_nopeli <- birds_nopeli%>% 
+  dplyr::select(1, 9, 10, 11, 12)
+
+birds_beak_env_nopeli <-  birds_nopeli %>% 
+  dplyr::filter(Order != "Pelecaniformes")
+
+birds_beak_env_nopeli <- birds_nopeli %>% 
+  dplyr:: select(2, 25, 28)
+
+# Convert to data.frame with rownames from Site column
+birds_beak_nopeli <- birds_beak_nopeli %>% column_to_rownames("Species")
+
+#scale data 
+birds_beak_nopeli_scaled <- scale(birds_beak_nopeli)
+
+#RUN PCA 
+birds_beak_nopeli_pca <- rda(birds_beak_nopeli_scaled)
+
+# Inspect by showing it in the console
+birds_beak_nopeli_pca
+
+# Eigenvalues retrieval
+eigenvals(birds_beak_nopeli_pca)
+
+# Retrieve eigenvalues PC axis and variance explained
+summary(eigenvals(birds_beak_nopeli_pca))
+summary(birds_beak_nopeli_pca)
+# 4 PCs; PC 1 explains 82% of variation. 
+
+# Create scree plot
+screeplot(birds_beak_nopeli_pca)
+
+# With broken stick
+screeplot(birds_beak_nopeli_pca, bstick = TRUE)
+
+# Create ordination diagram
+ordiplot(birds_beak_nopeli_pca, type = "text")
+
+# Create ordination diagram with arrows for the beak dimensions (length two times, 
+#depth and width)
+biplot(birds_beak_nopeli_pca, type = "text")
+
+####### With and without pelicans does not look crazy different thus far 
+
+# Extract PC1 value for Univariate and GLM *********
+# Extract PC1 and make object 
+
+scorespca_nopeli <- scores(birds_beak_nopeli_pca)
+scorespca_nopeli$sites
+
+# Extract PC1 and make object ********
+PC1_nopeli <- scorespca_nopeli$sites[, 1] #????
+PC1_nopeli <- as.data.frame(PC1_nopeli)
+
+PC1_nopeli %>% dplyr::select(1)
+
 # Add PC1 to birds' data frame; Careful with which data fram you're putting PC1 in.
-birds_beak_env$PC1 <- PC1_nopeli$PC1
+birds_nopeli$PC1 <- PC1_nopeli$PC1
 # Need to change PC1 to a vector (Can't be a list in glm())
-birds_beak_env$PC1 <- unlist(birds_beak_env$PC1)
+birds_beak_env_nopeli$PC1 <- unlist(birds_beak_env_nopeli$PC1)
 
 
 ### RUN Generalized LILEAR MIXED MODEL 
 
 # First Check if there are variables with only 1 level first using 
-birds_beak_env <- birds %>% 
+birds_beak_env_nopeli <- birds %>%  ### Identical AIC might come out of this. 
   dplyr:: select(2, 25, 28)
-lapply(birds_beak_env[c("Family", "Habitat", 
+lapply(birds_beak_env_nopeli[c("Family", "Habitat", 
                         "Trophic.Level")], unique) # We're good.
 
 ### Convert environmental variables to factors
-birds_beak_env$Family <- factor(birds_beak_env$Family)
+birds_beak_env_nopeli$Family <- factor(birds_beak_env_nopeli$Family)
 
-birds_beak_env %>% filter(Habitat != "NA")
-birds_beak_env$Habitat <- factor(birds_beak_env$Habitat) 
-# WHY IS THERE STILL NA????
+birds_beak_env_nopeli$Habitat <- factor(birds_beak_env_nopeli$Habitat) 
 
-birds_beak_env$Trophic.Level <- factor(birds_beak_env$Trophic.Level)
+birds_beak_env_nopeli$Trophic.Level <- factor(birds_beak_env_nopeli$Trophic.Level)
+
+# Extract PC1 and make object ********
+PC1_nopeli <- scorespca_nopeli$sites[, 1] #????
+PC1_nopeli <- as.data.frame(PC1_nopeli)
+
+PC1_nopeli %>% dplyr::select(1)
+
 
 # Add PC1 to birds' data frame; Careful with which data fram you're putting PC1 in.
-birds$PC1 <- PC1$PC1
+birds_nopeli$PC1 <- PC1_nopeli$PC1_nopeli
 # Need to change PC1 to a vector (Can't be a list in glm())
-birds$PC1 <- unlist(birds$PC1)
+birds_nopeli$PC1 <- unlist(birds_nopeli$PC1)
 
 # Run Generalized Linear Model.
 # We did not identify random factors. 
-glm_birds_beak <- glm(PC1 ~ Family + Habitat +  
-                        Trophic.Level, data = birds)
+glm_birds_beak_nopeli <- glm(PC1 ~ Family + Habitat +  
+                        Trophic.Level, data = birds_nopeli) # the problem with AIC might be here. 
+# do I need to cnag "birds"?
 
-vif(glm_birds_beak) # No colinearity; # We're good.
-Anova(glm_birds_beak)
-summary(glm_birds_beak)
+vif(glm_birds_beak_nopeli) # No colinearity; # We're good.
+Anova(glm_birds_beak_nopeli)
+summary(glm_birds_beak_nopeli)
 
 #POST-HOC
 #### Analyse the effect of forage type by looking at the difference among the three forage types
 # a sort of post-hoc test, with the default Sidak correction 
-emmeans(glm_birds_beak, pairwise ~ Family, adjust = "sidak", group = TRUE)
+emmeans(glm_birds_beak_nopeli, pairwise ~ Family, adjust = "sidak", group = TRUE)
 
-emmeans(glm_birds_beak, pairwise ~ Habitat, adjust = "sidak", group = TRUE)
+emmeans(glm_birds_beak_nopeli, pairwise ~ Habitat, adjust = "sidak", group = TRUE)
 #NA is fucking us with habitat... what to do? 
 # Can still tell taht there is no significant difference between habitats
 
-emmeans(glm_birds_beak, pairwise ~ Trophic.Level, adjust = "sidak", group = TRUE)
+emmeans(glm_birds_beak_nopeli, pairwise ~ Trophic.Level, adjust = "sidak", group = TRUE)
 # difference between herbivores and omnivores barely exists
 
-# No difference betweena with and without pelicans....
+# No difference between with and without pelicans....
 
 #Determine what's is the the best model :) 
-stepwise <- stepAIC(glm_birds_beak, direction = 'backward')
+stepwise <- stepAIC(glm_birds_beak_nopeli, direction = 'backward')
 
 stepwise$anova # no better model could be found by removing variables. 
 summary(stepwise)
