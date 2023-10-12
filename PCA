@@ -1,3 +1,17 @@
+#### PCA for WITHOUT PELICANS
+
+##### Perform PCA with all beak traits WITHOUT Pelicans 
+#prepare data-set, excluding pelicans and ratios
+
+birds_beak_nopeli <- birds %>% 
+  dplyr::filter(Order != "Pelecaniformes")
+
+birds_beak_nopeli <- birds_beak_nopeli%>% 
+  dplyr::select(1, 9, 10, 11, 12)
+
+birds_beak_env <- birds %>% 
+  dplyr:: select(2, 3, 25, 26, 28, 29)
+
 # Convert to data.frame with rownames from Site column
 birds_beak <- birds_beak %>% column_to_rownames("Species")
 
